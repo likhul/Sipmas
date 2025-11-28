@@ -1,0 +1,424 @@
+:root {
+    /* --- 1. WARNA UTAMA (DEFINISI BARU) --- */
+    --primary: #1a2a47;       /* Navy */
+    --primary-gradient: linear-gradient(135deg, #1a2a47 0%, #243b55 100%);
+    
+    --accent: #ffaa33;        /* Emas */
+    --accent-gradient: linear-gradient(135deg, #ffaa33 0%, #e6952e 100%);
+    
+    /* --- 2. KAMUS ALIAS (PENTING: Agar kode lama tetap jalan) --- */
+    /* Ini yang memperbaiki tombol putih Anda! */
+    --primary-color: #1a2a47; 
+    --accent-color: #ffaa33;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+
+    /* --- 3. WARNA STATUS --- */
+    --success: #28a745;       
+    --danger: #dc3545;        
+    --warning: #ffc107;
+    
+    /* --- 4. BACKGROUND & TEXT --- */
+    --bg-body: #f4f7fa;
+    --bg-glass: rgba(255, 255, 255, 0.95);
+    --bg-card: #ffffff;
+    
+    --text-main: #2d3436;
+    --text-muted: #636e72;
+    
+    /* --- 5. EFEK --- */
+    --radius: 12px;
+    --shadow-soft: 0 5px 15px rgba(0, 0, 0, 0.05);
+    --shadow-float: 0 15px 35px rgba(26, 42, 71, 0.15);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Poppins', sans-serif; /* Font Original */
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    margin: 0; padding: 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* ========================================= */
+/* 2. LAYOUT ADMIN (SIDEBAR + KONTEN) */
+/* ========================================= */
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar Navy (Elegan) */
+.admin-sidebar {
+    width: 260px;
+    background-color: var(--primary); /* Warna Asli */
+    color: white;
+    display: flex; flex-direction: column;
+    position: fixed; height: 100vh; left: 0; top: 0; z-index: 1000;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+    border-top-right-radius: 20px; /* Sedikit lengkungan di ujung kanan */
+    border-bottom-right-radius: 20px;
+}
+
+.sidebar-header {
+    padding: 30px 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.sidebar-header h4 { margin: 0; font-weight: 700; letter-spacing: 1px; color: var(--accent); }
+.sidebar-header p { margin: 5px 0 0; font-size: 0.75rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px;}
+
+.sidebar-menu { list-style: none; padding: 20px 10px; margin: 0; overflow-y: auto; }
+.sidebar-menu li { margin-bottom: 8px; }
+.sidebar-menu a {
+    display: flex; align-items: center; gap: 15px;
+    padding: 12px 20px;
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 0.9rem;
+    border-radius: 10px; /* Menu tidak kotak, tapi membulat */
+    transition: var(--transition);
+}
+.sidebar-menu a:hover, .sidebar-menu a.active {
+    background-color: rgba(255,255,255,0.1);
+    color: white;
+    transform: translateX(5px); /* Efek gerak sedikit saat hover */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.sidebar-menu a.active {
+    background: linear-gradient(90deg, var(--accent), #e6952e); /* Active warna Emas */
+    color: var(--primary);
+    font-weight: 700;
+}
+
+/* Konten Kanan */
+.admin-content {
+    flex: 1;
+    margin-left: 260px;
+    padding: 40px;
+    width: calc(100% - 260px);
+}
+
+/* Header Halaman (Floating Card) */
+.content-header {
+    background: white; padding: 25px 30px; 
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    margin-bottom: 30px; 
+    display: flex; justify-content: space-between; align-items: center;
+    border-left: 5px solid var(--primary);
+}
+.content-header h2 { margin: 0; color: var(--primary); font-size: 1.5rem; font-weight: 700; }
+
+/* ========================================= */
+/* 3. KOMPONEN UI (CARD & TOMBOL) */
+/* ========================================= */
+
+/* Card yang Lebih Hidup (Tidak Kaku) */
+.card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    padding: 30px;
+    margin-bottom: 30px;
+    border: none;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+.card:hover {
+    transform: translateY(-5px); /* Efek melayang saat mouse masuk */
+    box-shadow: var(--shadow-hover);
+}
+
+.card h3 {
+    margin-top: 0; margin-bottom: 25px;
+    color: var(--primary);
+    font-weight: 600;
+    position: relative;
+    display: inline-block;
+}
+/* Garis bawah judul yang estetik */
+.card h3::after {
+    content: ''; display: block; width: 50%; height: 3px;
+    background: var(--accent); margin-top: 8px; border-radius: 2px;
+}
+
+/* Tombol (Rounded & Shadow) */
+/* Update Bagian Tombol */
+.btn-primary, button {
+    background: var(--primary) !important; /* Paksa warna Navy */
+    background: var(--primary-gradient) !important; /* Timpa dengan Gradient jika support */
+    color: white !important; /* Pastikan teks putih */
+    padding: 10px 22px; 
+    border-radius: 8px; 
+    border: none;
+    cursor: pointer; 
+    font-size: 0.9rem; 
+    font-weight: 500;
+    box-shadow: 0 4px 10px rgba(26, 42, 71, 0.3);
+    text-decoration: none; 
+    display: inline-block;
+    transition: var(--transition);
+}
+.btn-primary:hover, button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 14px rgba(26, 42, 71, 0.2);
+    filter: brightness(1.1);
+}
+.btn-warning { background-color: var(--accent); color: var(--primary); }
+.btn-danger { background-color: var(--danger); color: white; }
+.btn-success { background-color: var(--success); color: white; }
+
+/* ========================================= */
+/* 4. FORM & TABEL (CLEAN LOOK) */
+/* ========================================= */
+
+/* Form Input (Soft Inset) */
+form label { display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-main); }
+form input, form select, form textarea {
+    width: 100%; padding: 15px; margin-bottom: 20px;
+    border: 1px solid #e0e6ed; border-radius: 10px;
+    background-color: #fcfcfc;
+    transition: var(--transition);
+}
+form input:focus, form select:focus, form textarea:focus {
+    border-color: var(--accent);
+    background-color: white;
+    box-shadow: 0 0 0 4px rgba(255, 170, 51, 0.1); /* Glow Emas Halus */
+    outline: none;
+}
+
+/* Tabel (Spacious) */
+.table-responsive { overflow-x: auto; border-radius: var(--radius); }
+table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    background: white;
+}
+table th {
+    background-color: var(--primary); color: white;
+    padding: 18px; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;
+    text-align: left;
+}
+table th:first-child { border-top-left-radius: 10px; }
+table th:last-child { border-top-right-radius: 10px; }
+
+table td {
+    padding: 18px; border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+table tr:last-child td { border-bottom: none; }
+table tr:hover td { background-color: #fdfdfd; }
+
+/* Badge */
+/* Badge Pill (PERBAIKAN: Anti Pecah) */
+/* BADGE STATUS (FIX CENTER) */
+.badge {
+    padding: 8px 15px;          /* Padding diperbesar sedikit agar lega */
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    
+    /* KUNCI POSISI TENGAH SEMPURNA: */
+    display: inline-flex;       /* Gunakan Flexbox */
+    align-items: center;        /* Tengah Vertikal */
+    justify-content: center;    /* Tengah Horizontal */
+    
+    white-space: nowrap;        /* Teks satu baris */
+    vertical-align: middle;
+    line-height: normal;        /* Reset line-height */
+}
+
+/* Warna Badge (Pastikan ini tetap ada di bawahnya) */
+.badge-warning { background: rgba(255, 193, 7, 0.15); color: #d39e00; }
+.badge-success { background: rgba(40, 167, 69, 0.15); color: #1e7e34; }
+.badge-danger { background: rgba(220, 53, 69, 0.15); color: #bd2130; }
+.badge-info    { background: rgba(13, 202, 240, 0.15); color: #0c4128; }
+.badge { padding: 6px 12px; border-radius: 30px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+
+
+/* Info Card */
+.info-card {
+    background: white; padding: 25px; border-radius: var(--radius);
+    border-left: 5px solid var(--accent);
+    box-shadow: var(--shadow-soft); margin-bottom: 20px;
+}
+
+/* ========================================= */
+/* 5. HALAMAN LOGIN & WARGA (NON-SIDEBAR) */
+/* ========================================= */
+
+/* Header Warga */
+header:not(.sidebar-header) {
+    background-color: var(--primary);
+    color: white; padding: 20px 5%;
+    display: flex; justify-content: space-between; align-items: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: 1px; margin: 0; }
+
+/* Container Warga */
+body:not(.admin-mode) main {
+    max-width: 1100px; margin: 40px auto; padding: 0 25px;
+}
+
+/* Login Page (Centered & Soft) */
+.login-wrapper {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background-color: var(--bg-body);
+}
+.login-container {
+    background: white; padding: 50px; border-radius: 20px;
+    width: 100%; max-width: 420px; text-align: center;
+    box-shadow: 0 20px 40px rgba(26, 42, 71, 0.15); /* Shadow Navy */
+    border-top: 5px solid var(--accent);
+}
+
+/* ========================================= */
+/* 6. UTILITIES */
+/* ========================================= */
+/* Modal */
+.hidden { display: none !important; }
+#custom-modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(26, 42, 71, 0.7); /* Navy Transparan */
+    z-index: 2000; display: flex; justify-content: center; align-items: center;
+    backdrop-filter: blur(5px);
+}
+.modal-content {
+    background: white; padding: 35px; border-radius: 20px;
+    width: 90%; max-width: 450px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efek membal */
+}
+@keyframes slideUp { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+footer { text-align: center; padding: 30px; color: var(--text-muted); font-size: 0.85rem; margin-top: auto; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-sidebar { position: relative; width: 100%; height: auto; border-radius: 0; }
+    .admin-content { margin-left: 0; width: 100%; padding: 20px; }
+    .admin-layout { flex-direction: column; }
+    table, thead, tbody, th, td, tr { display: block; }
+    table thead { display: none; }
+    table tr { margin-bottom: 20px; border: 1px solid #eee; border-radius: 10px; background: white; padding: 10px; }
+    table td { padding-left: 50%; position: relative; text-align: right; border-bottom: 1px solid #f9f9f9; }
+    table td::before { content: attr(data-label); position: absolute; left: 15px; font-weight: 700; color: var(--primary); }
+}
+
+td .btn-success, td .btn-primary, td .btn-danger, td .btn-warning {
+    white-space: nowrap; /* Teks jangan turun baris */
+    margin: 0 2px;      /* Jarak antar tombol */
+}
+
+td div[style*="display: flex"] {
+    flex-wrap: nowrap;
+}
+
+/* ========================================= */
+/* PROGRESS BAR CUSTOM (STATUS SURAT) */
+/* ========================================= */
+.progress-track {
+    width: 100%;
+    height: 6px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 1s ease-in-out;
+    background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+    background-size: 1rem 1rem;
+}
+
+/* Warna Status Spesifik */
+.prog-pending { width: 15%; background-color: #ffaa33; }       /* Baru Masuk */
+.prog-verifikasi { width: 50%; background-color: #17a2b8; }    /* Cek Admin */
+.prog-ttd { width: 80%; background-color: #6f42c1; }           /* Nunggu Kades */
+.prog-selesai { width: 100%; background-color: #28a745; }      /* Selesai */
+.prog-tolak { width: 100%; background-color: #dc3545; opacity: 0.6; } /* Gagal */
+
+/* Gaya Logo Besar */
+.logo-desa {
+    height: 65px;  /* Ukuran lebih besar (sebelumnya 35px) */
+    width: auto;
+    object-fit: contain;
+    
+    /* Trik agar kotak putih terlihat rapi seperti lencana */
+    background-color: white; 
+    padding: 2px;
+    border-radius: 8px; /* Sudut melengkung */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2); /* Efek timbul */
+}
+
+/* Mengatur Teks di Samping Logo */
+.header-brand {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.header-brand h1 {
+    font-size: 1.4rem; 
+    font-weight: 700; 
+    margin: 0; 
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.header-brand small {
+    font-size: 0.8rem; 
+    opacity: 0.8; 
+    font-weight: 400;
+}
+
+/* ========================================= */
+/* FIX: MENGATASI HEADER TERTINDIH SIDEBAR */
+/* ========================================= */
+
+/* 1. Jika Body punya class 'admin-mode' (Admin/Kades sedang login) */
+body.admin-mode header {
+    margin-left: 250px;          /* Geser Header ke kanan selebar Sidebar */
+    width: calc(100% - 250px);   /* Lebar Header dikurangi lebar Sidebar */
+    position: relative;          /* Pastikan posisinya aman */
+    z-index: 500;
+}
+
+/* 2. Pastikan Sidebar selalu di paling kiri dan penuh */
+.admin-sidebar {
+    width: 270px;               /* Kunci lebar sidebar */
+    left: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 1000;              /* Layer paling atas */
+}
+
+/* 3. Penyesuaian Mobile (HP) */
+@media (max-width: 768px) {
+    /* Di HP, Header kembali penuh, Sidebar turun/sembunyi */
+    body.admin-mode header {
+        margin-left: 0;
+        width: 100%;
+    }
+    .admin-sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+    .admin-content {
+        margin-left: 0;
+        width: 100%;
+    }
+}
