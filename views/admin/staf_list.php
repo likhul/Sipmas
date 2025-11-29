@@ -16,11 +16,11 @@
         <table style="width: 100%; border-collapse: collapse;">
             <thead>
                 <tr style="background: #f8f9fa;">
-                    <th style="padding:10px; border-bottom:2px solid #ddd;">Nama</th>
-                    <th style="padding:10px; border-bottom:2px solid #ddd;">Email</th>
-                    <th style="padding:10px; border-bottom:2px solid #ddd;">Role</th>
-                    <th style="padding:10px; border-bottom:2px solid #ddd;">Jabatan</th>
-                    <th style="padding:10px; border-bottom:2px solid #ddd;">Aksi</th>
+                    <th style="text-align: center; padding:10px; border-bottom:2px solid #ddd;">Nama</th>
+                    <th style="text-align: center; padding:10px; border-bottom:2px solid #ddd;">Email</th>
+                    <th style="text-align: center; padding:10px; border-bottom:2px solid #ddd;">Role</th>
+                    <th style="text-align: center; padding:10px; border-bottom:2px solid #ddd;">Jabatan</th>
+                    <th style="text-align: center; padding:10px; border-bottom:2px solid #ddd;">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -43,9 +43,18 @@
                             <td style="padding:10px; border-bottom:1px solid #eee;">
                                 <?= htmlspecialchars($u->jabatan ?? '-') ?>
                             </td>
-                            <td style="padding:10px; border-bottom:1px solid #eee;">
-                                <a href="index.php?page=form_staf&id=<?= $u->id ?>" style="color: #e0a800; font-weight:bold; text-decoration:none;">Edit</a>|
-                                <a href="index.php?action=hapus_staf&id=<?= $u->id ?>" onclick="return confirm('Hapus akun ini?')" style="color: #dc3545; font-weight:bold; text-decoration:none;">Hapus</a>
+                            <td style="padding:10px; border-bottom:1px solid #eee; text-align: center;">
+                                <div style="display: flex; gap: 5px; justify-content: center;">
+                                    <a href="index.php?page=form_staf&id=<?= $u->id ?>" class="btn-action btn-edit" style="min-width: auto; padding: 6px 12px;">
+                                        ✏️ Edit
+                                    </a>
+                                    
+                                    <a href="#" 
+                                        onclick="showPopup('delete', 'Hapus Staf?', 'Akun <?= htmlspecialchars($u->nama_lengkap) ?> akan dihapus. User tidak bisa login lagi.', () => window.location.href='index.php?action=hapus_staf&id=<?= $u->id ?>')" 
+                                        class="btn-action btn-delete" style="min-width: auto; padding: 6px 12px;">
+                                            🗑️ Hapus
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>

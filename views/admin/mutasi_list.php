@@ -43,10 +43,10 @@
         <table>
             <thead>
                 <tr>
-                    <th>Tanggal</th>
-                    <th>Nama Warga</th>
-                    <th>Jenis Peristiwa</th>
-                    <th>Keterangan</th>
+                    <th style="text-align: center">Tanggal</th>
+                    <th style="text-align: center">Nama Warga</th>
+                    <th style="text-align: center">Jenis Peristiwa</th>
+                    <th style="text-align: center">Keterangan</th>
                 </tr>
             </thead>
             <tbody>

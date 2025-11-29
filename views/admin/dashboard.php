@@ -22,13 +22,7 @@
                 </thead>
                 <tbody>
                     <?php if (empty($permohonanMasuk)): ?>
-                        <tr>
-                            <td colspan="5" style="text-align: center; padding: 40px; color: #888;">
-                                <div style="font-size: 2rem; margin-bottom: 10px;">📭</div>
-                                <h4 style="margin: 0; color: #555;">Belum ada data</h4>
-                                <p style="font-size: 0.9rem; margin:0;">Saat ini belum ada surat yang selesai diproses.</p>
-                            </td>
-                        </tr>
+                        <tr><td colspan="4" style="text-align:center; padding: 30px; color: #888;">Tidak ada permohonan baru.</td></tr>
                     <?php else: ?>
                         <?php foreach ($permohonanMasuk as $p): ?>
                             <tr>
@@ -45,7 +39,7 @@
                                         <form action="index.php?action=verifikasi_admin" method="POST" style="margin:0;">
                                             <input type="hidden" name="id" value="<?= $p->id ?>">
                                             <input type="hidden" name="keputusan" value="terima">
-                                            <button type="submit" class="btn-warning" style="padding: 6px 12px; font-size: 0.85rem; border: 1px solid #e0a800;">✔ Teruskan</button>
+                                            <button type="submit" class="btn-warning" style="padding: 6px 12px; font-size: 0.85rem; border: 1px solid;">✔ Teruskan</button>
                                         </form>
 
                                         <button type="button" onclick="bukaModalTolak(<?= $p->id ?>)" class="btn-danger" style="padding: 6px 12px; font-size: 0.85rem;">✖ Tolak</button>
@@ -65,7 +59,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Tiket</th> <th>Pemohon</th> <th>Jenis Surat</th> <th>Disetujui Tanggal</th> <th style="text-align: center;">Aksi</th>
+                        <th>No. Registrasi</th> <th>Pemohon</th> <th>Jenis Surat</th> <th>Disetujui Tanggal</th> <th style="text-align: center;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -96,8 +90,8 @@
                                             🖨 Cetak
                                         </a>
                                         
-                                        <a href="index.php?action=arsipkan_surat&id=<?= $pc->id ?>" 
-                                           onclick="return confirm('Pindahkan ke arsip?')"
+                                        <a href="#" 
+                                           onclick="showPopup('confirm', 'Arsipkan Surat?', 'Surat akan dipindahkan ke Gudang Arsip.', () => window.location.href='index.php?action=arsipkan_surat&id=<?= $pc->id ?>')"
                                            class="btn-primary"
                                            style="background: #6c757d; color: white; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-size: 0.85rem; display: inline-flex; align-items: center;">
                                             📦 Arsip
@@ -110,22 +104,19 @@
                 </tbody>
             </table>
         </div>
+
+        <div style="text-align: right; margin-top: 15px; border-top: 1px solid #f0f0f0; padding-top: 10px;">
+            <a href="index.php?page=data_arsip" style="font-size: 0.85rem; color: #6c757d; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 5px;">
+                📂 Buka Gudang Arsip &rarr;
+            </a>
+        </div>
     </div>
 </section>
 
 <script>
 function bukaModalTolak(idPermohonan) {
-    const modal = document.getElementById('custom-modal');
-    const btnConfirm = document.getElementById('modal-submit-btn');
-    const textarea = document.getElementById('modal-alasan');
-
-    modal.classList.remove('hidden');
-    textarea.value = "";
-    
-    btnConfirm.onclick = function() {
-        const alasan = textarea.value;
-        if(!alasan.trim()) { alert("Alasan tidak boleh kosong!"); return; }
-
+    // Menggunakan sistem Global Modal (showPopup) yang ada di footer
+    showPopup('input', 'Tolak Permohonan', 'Silakan tulis alasan penolakan agar warga mengerti.', function(alasan) {
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = 'index.php?action=verifikasi_admin';
@@ -142,6 +133,6 @@ function bukaModalTolak(idPermohonan) {
         form.appendChild(inputId); form.appendChild(inputKeputusan); form.appendChild(inputAlasan);
         document.body.appendChild(form);
         form.submit();
-    };
+    });
 }
 </script>

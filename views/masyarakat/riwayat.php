@@ -1,78 +1,70 @@
-<section id="masyarakat-dashboard">
+<section>
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h2>Riwayat Permohonan Surat (SIA-12)</h2>
-        <a href="index.php?page=ajukan_surat" class="btn-primary" style="text-decoration: none; background: var(--primary-color); color: white; padding: 10px 20px; border-radius: 5px;">+ Ajukan Baru</a>
+        <h2 style="margin: 0; color: var(--primary);">Semua Riwayat Permohonan</h2>
+        <a href="index.php?page=dashboard_warga" class="btn-warning" style="text-decoration: none; border-radius: 5px; font-size: 0.9rem;">
+            &larr; Kembali ke Dashboard
+        </a>
     </div>
 
     <div class="card">
-        <div style="overflow-x: auto;">
-            <table>
+        <div class="table-responsive">
+            <table style="width: 100%;">
                 <thead>
                     <tr>
-                        <th>No. Tiket</th>
-                        <th>Tanggal</th>
-                        <th>Jenis Layanan</th>
-                        <th>Status Saat Ini</th>
-                        <th>Keterangan / Aksi</th>
+                        <th style="width: 5%;">No</th>
+                        <th style="width: 20%;">No. Registrasi</th> <th style="width: 15%;">Tanggal</th>
+                        <th style="width: 25%;">Jenis Surat</th>
+                        <th style="width: 20%;">Status</th>
+                        <th style="width: 15%; text-align: center;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($riwayat)): ?>
-                        <tr>
-                            <td colspan="5" style="text-align: center; padding: 20px;">
-                                Belum ada riwayat permohonan. Silakan ajukan surat baru.
-                            </td>
-                        </tr>
+                        <tr><td colspan="6" style="text-align: center; color: #888; padding: 30px;">Belum ada riwayat permohonan.</td></tr>
                     <?php else: ?>
-                        <?php foreach ($riwayat as $r): ?>
+                        <?php $no=1; foreach ($riwayat as $r): ?>
                             <tr>
-                                <td data-label="No. Tiket"><strong><?= $r->nomor_tiket ?></strong></td>
+                                <td data-label="No"><?= $no++ ?></td>
                                 
-                                <td data-label="Tanggal"><?= date('d-m-Y', strtotime($r->created_at)) ?></td>
-                                
-                                <td data-label="Jenis Layanan"><?= $r->nama_layanan ?></td>
+                                <td data-label="Nomor">
+                                    <?php if($r->nomor_surat_resmi): ?>
+                                        <span style="font-weight:bold; color:var(--primary);"><?= $r->nomor_surat_resmi ?></span>
+                                    <?php else: ?>
+                                        <span style="color:#666;"><?= $r->nomor_tiket ?></span>
+                                    <?php endif; ?>
+                                </td>
+
+                                <td data-label="Tanggal"><?= date('d/m/Y', strtotime($r->created_at)) ?></td>
+                                <td data-label="Jenis"><strong><?= htmlspecialchars($r->nama_layanan) ?></strong></td>
                                 
                                 <td data-label="Status">
                                     <?php 
-                                        $warna = '#6c757d'; // Default abu-abu
-                                        $label = ucfirst(str_replace('_', ' ', $r->status)); 
-
-                                        if ($r->status == 'pending') $warna = '#ffaa33'; // Kuning
-                                        elseif ($r->status == 'verifikasi_admin') $warna = '#17a2b8'; // Biru
-                                        elseif ($r->status == 'menunggu_kades') $warna = '#6610f2'; // Ungu
-                                        elseif ($r->status == 'disetujui' || $r->status == 'selesai') $warna = '#28a745'; // Hijau
-                                        elseif ($r->status == 'ditolak') $warna = '#dc3545'; // Merah
+                                        $statusClass = 'badge-warning';
+                                        if(in_array($r->status, ['disetujui','selesai'])) $statusClass = 'badge-success';
+                                        if($r->status == 'ditolak') $statusClass = 'badge-danger';
                                     ?>
-                                    <span style="background-color: <?= $warna ?>; color: white; padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold; display: inline-block;">
-                                        <?= $label ?>
+                                    <span class="badge <?= $statusClass ?>">
+                                        <?= ucfirst(str_replace('_', ' ', $r->status)) ?>
                                     </span>
                                 </td>
 
-                                <td data-label="Aksi">
-                                    <?php if ($r->status == 'ditolak'): ?>
-                                        <small style="color: var(--danger-color);">
-                                            Alasan: <?= $r->keterangan_status ?>
-                                        </small>
-                                    
-                                    <?php elseif ($r->status == 'disetujui' || $r->status == 'selesai'): ?>
+                                <td data-label="Aksi" style="text-align: center;">
+                                    <?php if (in_array($r->status, ['disetujui','selesai'])): ?>
                                         <a href="index.php?page=cetak_surat&id=<?= $r->id ?>" target="_blank" 
-                                           style="background: #28a745; border: none; color: white; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-size: 13px; font-weight: bold; display: inline-block;">
-                                            ⬇ Unduh / Cetak
+                                           class="btn-success" style="padding: 6px 10px; font-size: 0.8rem; text-decoration:none; color:white;">
+                                            ⬇ Unduh
                                         </a>
-                                    
+                                    <?php elseif($r->status == 'ditolak'): ?>
+                                        <span style="color: var(--danger); font-size: 0.8rem;">Ditolak</span>
                                     <?php else: ?>
-                                        <small style="color: #888;">Sedang diproses petugas</small>
+                                        <span style="color: #ccc; font-size: 0.8rem;">-</span>
                                     <?php endif; ?>
                                 </td>
                             </tr>
-                        <?php endforeach; ?> 
+                        <?php endforeach; ?>
                     <?php endif; ?>
                 </tbody>
             </table>
         </div>
-    </div>
-    
-    <div style="margin-top: 20px;">
-        <a href="index.php?page=dashboard_warga" style="color: var(--primary-color); text-decoration: none;">&larr; Kembali ke Dashboard</a>
     </div>
 </section>

@@ -23,7 +23,7 @@ $useSidebar = in_array($role, ['admin', 'kades']);
 
     <header>
         <div style="display: flex; align-items: center; gap: 15px;">
-            <img src="assets/images/logoo.png" alt="Logo" style="height: 40px; width: auto;" onerror="this.style.display='none'">
+            <img src="assets/images/logo.png" alt="Logo" style="height: 40px; width: auto;" onerror="this.style.display='none'">
             <div>
                 <h1 style="margin: 0; font-size: 1.1rem; line-height: 1.2;">SIPMAS</h1>
                 <small style="opacity: 0.8; font-size: 0.8rem; font-weight: normal;">Desa Simpang Sungai Duren</small>
@@ -37,9 +37,13 @@ $useSidebar = in_array($role, ['admin', 'kades']);
                     <span style="font-size: 0.75rem; opacity: 0.7;">(<?= ucfirst($role) ?>)</span>
                 </span>
                 
-                <?php if(!$useSidebar): // Logout di header HANYA untuk Warga (Admin ada di sidebar) ?>
+                <?php if(!$useSidebar): // [POSISI 1] Logout untuk Warga (Header Atas) ?>
                     <a href="index.php?page=profil" style="color: white; text-decoration: none; font-size: 0.85rem; margin-right: 10px;">Profil</a>
-                    <a href="index.php?page=logout" class="btn-warning" style="padding: 6px 15px; font-size: 0.8rem; border-radius: 20px; font-weight: bold;">Logout</a>
+                    
+                    <a href="#" onclick="showPopup('logout', 'Konfirmasi Logout', 'Yakin ingin keluar dari sistem?', () => window.location.href='index.php?page=logout')" 
+                       class="btn-warning" style="padding: 6px 15px; font-size: 0.8rem; border-radius: 20px; font-weight: bold;">
+                       Logout
+                    </a>
                 <?php endif; ?>
             </div>
         <?php endif; ?>
@@ -75,12 +79,16 @@ $useSidebar = in_array($role, ['admin', 'kades']);
                         <li><a href="index.php?page=profil" class="<?= $p=='profil'?'active':'' ?>"><span>👤</span> Profil Saya</a></li>
                     <?php endif; ?>
 
-                    <li><a href="index.php?page=logout" style="color: var(--danger-color); border-top: 1px solid rgba(255,255,255,0.1); margin-top: 10px;"><span>🚪</span> Logout</a></li>
+                    <li>
+                        <a href="#" onclick="showPopup('logout', 'Konfirmasi Logout', 'Yakin ingin keluar dari sistem?', () => window.location.href='index.php?page=logout')" 
+                           style="color: var(--danger); border-top: 1px solid rgba(255,255,255,0.1); margin-top: 10px;">
+                            <span>🚪</span> Logout
+                        </a>
+                    </li>
                 </ul>
             </aside>
 
             <div class="admin-content">
-                
                 <?php if(isset($_SESSION['flash_message'])): ?>
                     <div class="alert badge-<?= $_SESSION['flash_type']=='success'?'success':'danger' ?>" 
                          style="display:block; padding: 15px; margin-bottom: 25px; border-radius: 8px; color: #fff; background-color: <?= $_SESSION['flash_type']=='success'?'#28a745':'#dc3545' ?>; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">

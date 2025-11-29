@@ -1,9 +1,4 @@
 <?php
-// =================================================================================
-// ROUTER UTAMA (Main Controller) - FINAL COMPLETE EDITION V5 (MASTER)
-// Mengatur: Login, Surat, Penduduk (Search & Mutasi), Info, Layanan, Staf, Pengaduan, Laporan
-// =================================================================================
-
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
 // 1. Load Configurations & Controllers
@@ -29,9 +24,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'auth';
 $action = isset($_GET['action']) ? $_GET['action'] : null;
 
 
-// =================================================================================
 // A. HANDLE POST REQUEST (SEMUA PROSES PENYIMPANAN DATA)
-// =================================================================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // --- AUTH (LOGIN & REGISTER) ---
@@ -61,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // --- PROFIL SAYA ---
+    // PROFIL SAYA
     if ($action == 'update_profil') {
         if(!isset($_SESSION['user_id'])) die("Akses Ditolak");
         $res = $userController->updateProfile($_SESSION['user_id'], $_POST['nama'], $_POST['email'], $_POST['hp'], $_POST['alamat'], $_POST['password']);
@@ -70,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: index.php?page=profil"); exit();
     }
 
-    // --- MASTER LAYANAN (SIA-03) ---
+    // MASTER LAYANAN
     if ($action == 'simpan_layanan') {
         if ($_SESSION['role'] != 'admin') die("Akses Ditolak");
         $res = $layananController->createLayanan($_POST['nama'], $_POST['kode'], $_POST['syarat']);
@@ -82,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: index.php?page=kelola_layanan"); exit();
     }
 
-    // --- TRANSAKSI SURAT (SIA-11, SIA-06, SIA-07) ---
+    // TRANSAKSI SURAT
     if ($action == 'simpan_permohonan') {
         $res = $permohonanController->ajukanSurat($_SESSION['user_id'], $_POST['jenis_surat'], ['keperluan'=>$_POST['keperluan'], 'keterangan'=>$_POST['keterangan_tambahan']], $_FILES['dokumen_pendukung']);
         $_SESSION['flash_message'] = $res ? "Permohonan terkirim!" : "Gagal kirim permohonan. Cek file.";
@@ -102,23 +95,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: index.php?page=dashboard_kades"); exit();
     }
 
-    // --- DATA PENDUDUK & MUTASI (SIA-02) ---
+    // DATA PENDUDUK (ADMIN) 
     if ($action == 'simpan_penduduk') {
         if ($_SESSION['role'] != 'admin') die("Akses Ditolak");
-        $data = ['role' => 'masyarakat', 'nik' => $_POST['nik'], 'nama' => $_POST['nama'], 'email' => $_POST['email'], 'password' => $_POST['password'], 'alamat' => $_POST['alamat'], 'hp' => $_POST['hp']];
+        $data = [
+            'role' => 'masyarakat',
+            'nik' => $_POST['nik'], 'nama' => $_POST['nama'], 'email' => $_POST['email'], 
+            'password' => $_POST['password'], 'alamat' => $_POST['alamat'], 'hp' => $_POST['hp'],
+            'tempat_lahir' => $_POST['tempat_lahir'], 'tanggal_lahir' => $_POST['tanggal_lahir'],
+            'jenis_kelamin' => $_POST['jenis_kelamin'], 'agama' => $_POST['agama'],
+            'status_perkawinan' => $_POST['status_perkawinan'], 'pekerjaan' => $_POST['pekerjaan']
+        ];
         $res = $userController->createUser($data);
         $_SESSION['flash_message'] = ($res===true) ? "Penduduk ditambahkan" : $res;
         $_SESSION['flash_type'] = ($res===true) ? "success" : "error";
         header("Location: index.php?page=manajemen_penduduk"); exit();
     }
-    if ($action == 'update_penduduk') {
+
+if ($action == 'update_penduduk') {
         if ($_SESSION['role'] != 'admin') die("Akses Ditolak");
-        $data = ['id' => $_POST['id'], 'nik' => $_POST['nik'], 'nama' => $_POST['nama'], 'email' => $_POST['email'], 'password' => $_POST['password'], 'alamat' => $_POST['alamat'], 'hp' => $_POST['hp'], 'status_kependudukan' => $_POST['status_kependudukan']];
+        
+        $data = [
+            'id' => $_POST['id'],
+            'nik' => $_POST['nik'], 
+            'nama' => $_POST['nama'], 
+            'email' => $_POST['email'], 
+            'password' => $_POST['password'] ?? '', 
+            'alamat' => $_POST['alamat'], 
+            'hp' => $_POST['hp'] ?? '',
+            'status_kependudukan' => $_POST['status_kependudukan'] ?? 'Tetap',
+            'tempat_lahir' => $_POST['tempat_lahir'] ?? '', 
+            'tanggal_lahir' => $_POST['tanggal_lahir'] ?? null,
+            'jenis_kelamin' => $_POST['jenis_kelamin'] ?? '', 
+            'agama' => $_POST['agama'] ?? '',
+            'status_perkawinan' => $_POST['status_perkawinan'] ?? '', 
+            'pekerjaan' => $_POST['pekerjaan'] ?? ''
+        ];
+
         $userController->updateUser($data);
         $_SESSION['flash_message'] = "Data penduduk diperbarui";
         $_SESSION['flash_type'] = "success";
         header("Location: index.php?page=manajemen_penduduk"); exit();
     }
+
     // MUTASI
     if ($action == 'simpan_mutasi') {
         if ($_SESSION['role'] != 'admin') die("Akses Ditolak");
@@ -128,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: index.php?page=data_mutasi"); exit();
     }
 
-    // --- MANAJEMEN STAF (ADMIN & KADES) ---
+    //  MANAJEMEN STAF (ADMIN & KADES) 
     if ($action == 'simpan_staf') {
         if ($_SESSION['role'] != 'admin') die("Akses Ditolak");
         $data = ['role'=>$_POST['role'], 'nik'=>null, 'nama'=>$_POST['nama'], 'email'=>$_POST['email'], 'password'=>$_POST['password'], 'alamat'=>'-', 'hp'=>$_POST['hp'], 'jabatan'=>$_POST['jabatan']];
@@ -142,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: index.php?page=manajemen_staf"); exit();
     }
 
-    // --- INFO & PENGADUAN ---
+    //  INFO & PENGADUAN 
     if ($action == 'simpan_info') {
         $infoController->createInfo($_POST['judul'], $_POST['kategori'], $_POST['isi'], $_SESSION['user_id']);
         $_SESSION['flash_message'] = "Pengumuman diterbitkan.";
@@ -163,11 +182,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['flash_type'] = "success";
         header("Location: index.php?page=pengaduan_saya"); exit();
     }
+    if ($action == 'update_status_pengaduan') {
+        if ($_SESSION['role'] != 'admin') die("Akses Ditolak");
+        // Panggil fungsi update (kita buat sebentar lagi)
+        $userController->updateStatusPengaduan($_POST['id'], $_POST['status']);
+        $_SESSION['flash_message'] = "Status pengaduan diperbarui.";
+        $_SESSION['flash_type'] = "success";
+        header("Location: index.php?page=admin_pengaduan"); exit();
+    }
 }
 
-// =================================================================================
 // B. HANDLE GET REQUEST (DELETE ACTIONS)
-// =================================================================================
 if ($action == 'hapus_layanan') { $layananController->deleteLayanan($_GET['id']); header("Location: index.php?page=kelola_layanan"); exit(); }
 if ($action == 'hapus_penduduk') { $userController->deletePenduduk($_GET['id']); header("Location: index.php?page=manajemen_penduduk"); exit(); }
 if ($action == 'hapus_info') { $infoController->deleteInfo($_GET['id']); header("Location: index.php?page=kelola_info"); exit(); }
@@ -184,13 +209,7 @@ if ($action == 'arsipkan_surat') { // ARSIP
     header("Location: index.php?page=dashboard_admin"); exit();
 }
 
-
-// =================================================================================
 // C. HANDLE GET REQUEST (TAMPILAN HALAMAN / VIEW)
-// =================================================================================
-
-// [FIX] JANGAN TAMPILKAN HEADER JIKA SEDANG CETAK
-// Ini yang bikin tampilan print jadi bersih!
 if ($page != 'cetak_surat' && $page != 'cetak_laporan') {
     require_once 'views/layouts/header.php';
 }
@@ -204,14 +223,14 @@ switch ($page) {
         include 'views/auth/login.php';
         break;
 
-    // --- COMMON ---
+    // COMMON 
     case 'profil':
         if(!isset($_SESSION['user_id'])) die("Login required");
         $user = $userController->getUserById($_SESSION['user_id']);
         include 'views/auth/profil.php';
         break;
 
-    // --- MASYARAKAT ---
+    // MASYARAKAT
     case 'dashboard_warga':
         $daftarInfo = $infoController->getAllInfo();
         $riwayat = $permohonanController->getRiwayatUser($_SESSION['user_id']);
@@ -230,7 +249,7 @@ switch ($page) {
         include 'views/masyarakat/pengaduan.php';
         break;
 
-    // --- ADMIN ---
+    // ADMIN 
     case 'dashboard_admin':
         $permohonanMasuk = $permohonanController->getPermohonanByStatus('pending');
         $permohonanSiapCetak = $permohonanController->getPermohonanByStatus('disetujui');
@@ -248,20 +267,19 @@ switch ($page) {
     case 'data_mutasi': $daftarMutasi = $userController->getRiwayatMutasi(); $semuaWarga = $userController->getAllMasyarakat(); include 'views/admin/mutasi_list.php'; break;
     case 'data_arsip': $daftarArsip = $permohonanController->getArsip(); include 'views/admin/arsip_list.php'; break;
 
-    case 'kelola_info':
-        $daftarInfo = $infoController->getAllInfo();
+    case 'kelola_info': $daftarInfo = $infoController->getAllInfo();
         if (isset($_GET['id'])) {
             $infoEdit = $infoController->getInfoById($_GET['id']);
         }
         include 'views/admin/info_list.php';
         break;
-    // --- KADES ---
+    // KADES 
     case 'dashboard_kades':
         $permohonanKades = $permohonanController->getPermohonanByStatus('menunggu_kades');
         include 'views/kades/dashboard.php';
         break;
 
-    // --- UTILS (DETAIL, CETAK, LAPORAN) ---
+    // UTILS (DETAIL, CETAK, LAPORAN) 
     case 'detail_permohonan':
         $detail = $permohonanController->getDetailPermohonan($_GET['id']);
         include 'views/admin/detail.php';
@@ -284,7 +302,6 @@ switch ($page) {
     default: echo "<h2 style='text-align:center;margin-top:50px;'>404 Not Found</h2>"; break;
 }
 
-// [FIX] JANGAN TAMPILKAN FOOTER JIKA SEDANG CETAK
 if ($page != 'cetak_surat' && $page != 'cetak_laporan') {
     require_once 'views/layouts/footer.php';
 }

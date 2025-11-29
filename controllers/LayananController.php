@@ -1,12 +1,11 @@
 <?php
 class LayananController {
     private $conn;
-
     public function __construct($db) {
         $this->conn = $db;
     }
 
-    // READ: Ambil Semua Layanan
+    //Ambil Semua Layanan
     public function getAllLayanan() {
         $query = "SELECT * FROM jenis_layanan ORDER BY id ASC";
         $stmt = $this->conn->prepare($query);
@@ -14,7 +13,7 @@ class LayananController {
         return $stmt->fetchAll();
     }
 
-    // READ: Ambil 1 Layanan (Untuk Edit)
+    //Ambil 1 Layanan (Untuk Edit)
     public function getLayananById($id) {
         $query = "SELECT * FROM jenis_layanan WHERE id = :id";
         $stmt = $this->conn->prepare($query);

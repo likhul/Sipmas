@@ -2,7 +2,7 @@
     <div class="content-header">
         <div>
             <h2 style="margin: 0; color: var(--primary);">Dashboard Kepala Desa</h2>
-            <p style="margin: 5px 0 0; color: #666;">Selamat bekerja, <strong>Bapak <?= htmlspecialchars($_SESSION['nama']) ?></strong>.</p>
+            <p style="margin: 5px 0 0; color: #666;">Selamat bekerja, <strong> <?= htmlspecialchars($_SESSION['nama']) ?></strong>.</p>
         </div>
         <div style="text-align: right;">
             <span class="badge badge-warning" style="font-size: 0.9rem; padding: 10px 15px; background-color: #6f42c1; color: white;">
@@ -18,7 +18,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th style="text-align: center;">Tiket</th>
+                        <th style="text-align: center;">No. Registrasi</th>
                         <th style="text-align: center;">Nama Pemohon</th>
                         <th style="text-align: center;">Jenis Surat</th>
                         <th style="text-align: center;">Tanggal Masuk</th>

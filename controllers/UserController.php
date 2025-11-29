@@ -6,26 +6,17 @@ class UserController {
         $this->conn = $db;
     }
 
-    // ==========================================================
-    // READ DATA
-    // ==========================================================
-
-    // Ambil Data Masyarakat (Bisa Filter Keyword Pencarian)
     public function getAllMasyarakat($keyword = null) {
         $sql = "SELECT * FROM users WHERE role = 'masyarakat'";
         
         if ($keyword) {
             $sql .= " AND (nama_lengkap LIKE :kw OR nik LIKE :kw)";
         }
-        
         $sql .= " ORDER BY created_at DESC";
-        
         $stmt = $this->conn->prepare($sql);
-        
         if ($keyword) {
             $stmt->bindValue(':kw', "%$keyword%");
         }
-        
         $stmt->execute();
         return $stmt->fetchAll();
     }
@@ -52,34 +43,22 @@ class UserController {
         return $stmt->fetch();
     }
 
-    // ==========================================================
-    // CREATE / UPDATE / DELETE
-    // ==========================================================
-
     // Tambah User Baru (Masyarakat / Admin / Kades)
     public function createUser($data) {
-        if (!empty($data['nik'])) {
-            if (!ctype_digit($data['nik'])) return "Gagal: NIK harus berupa angka!";
-            if (strlen($data['nik']) != 16) return "Gagal: NIK harus 16 digit!";
-        }
-        // Cek Duplikat Email/NIK
         $check = "SELECT id FROM users WHERE email = :email";
-        if (!empty($data['nik'])) {
-            $check .= " OR nik = :nik";
-        }
+        if (!empty($data['nik'])) { $check .= " OR nik = :nik"; }
         
         $stmtCheck = $this->conn->prepare($check);
         $paramsCheck = [':email' => $data['email']];
         if (!empty($data['nik'])) $paramsCheck[':nik'] = $data['nik'];
-        
         $stmtCheck->execute($paramsCheck);
+        
         if($stmtCheck->rowCount() > 0) return "Email atau NIK sudah terdaftar!";
 
-        // Hash Password
         $hash = password_hash($data['password'], PASSWORD_BCRYPT);
 
-        $query = "INSERT INTO users (role, nik, nama_lengkap, email, password, alamat, no_hp, jabatan, status_akun, status_kependudukan) 
-                  VALUES (:role, :nik, :nama, :email, :pass, :alamat, :hp, :jabatan, 1, 'Tetap')";
+        $query = "INSERT INTO users (role, nik, nama_lengkap, email, password, alamat, no_hp, jabatan, status_akun, status_kependudukan, tempat_lahir, tanggal_lahir, jenis_kelamin, agama, status_perkawinan, pekerjaan) 
+                  VALUES (:role, :nik, :nama, :email, :pass, :alamat, :hp, :jabatan, 1, 'Tetap', :tmp_lahir, :tgl_lahir, :jk, :agama, :kawin, :kerja)";
         
         $stmt = $this->conn->prepare($query);
         $exec = $stmt->execute([
@@ -90,53 +69,52 @@ class UserController {
             ':pass' => $hash,
             ':alamat' => $data['alamat'],
             ':hp' => $data['hp'],
-            ':jabatan' => $data['jabatan'] ?? null
+            ':jabatan' => $data['jabatan'] ?? null,
+            ':tmp_lahir' => $data['tempat_lahir'] ?? null,
+            ':tgl_lahir' => $data['tanggal_lahir'] ?? null,
+            ':jk' => $data['jenis_kelamin'] ?? null,
+            ':agama' => $data['agama'] ?? null,
+            ':kawin' => $data['status_perkawinan'] ?? null,
+            ':kerja' => $data['pekerjaan'] ?? null
         ]);
 
         return $exec ? true : "Gagal menyimpan data.";
     }
 
-    // Update User (Termasuk Mutasi & Ganti Password)
+    // UPDATE 
     public function updateUser($data) {
         try {
-            if (isset($data['nik'])) {
-                if (!ctype_digit($data['nik'])) return false; // Gagal jika ada huruf
-                if (strlen($data['nik']) != 16) return false; // Gagal jika bukan 16
-            }
-            
+            $sql = "UPDATE users SET nama_lengkap=:nama, email=:email, alamat=:alamat, no_hp=:hp, jabatan=:jabatan,
+                    tempat_lahir=:tmp_lahir, tanggal_lahir=:tgl_lahir, jenis_kelamin=:jk, agama=:agama, 
+                    status_perkawinan=:kawin, pekerjaan=:kerja";
+
             $params = [
-                ':nama' => $data['nama'], ':email' => $data['email'], 
-                ':alamat' => $data['alamat'], ':hp' => $data['hp'], 
-                ':jabatan' => $data['jabatan'] ?? null,
+                ':nama' => $data['nama'], ':email' => $data['email'], ':alamat' => $data['alamat'], ':hp' => $data['hp'], 
+                ':jabatan' => $data['jabatan'] ?? null, 
+                ':tmp_lahir' => $data['tempat_lahir'] ?? null, ':tgl_lahir' => $data['tanggal_lahir'] ?? null,
+                ':jk' => $data['jenis_kelamin'] ?? null, ':agama' => $data['agama'] ?? null,
+                ':kawin' => $data['status_perkawinan'] ?? null, ':kerja' => $data['pekerjaan'] ?? null,
                 ':id' => $data['id']
             ];
 
-            $sql = "UPDATE users SET nama_lengkap=:nama, email=:email, alamat=:alamat, no_hp=:hp, jabatan=:jabatan";
-
-            // Update Status Kependudukan (Mutasi)
             if(isset($data['status_kependudukan'])) {
                 $sql .= ", status_kependudukan=:status_kependudukan";
                 $params[':status_kependudukan'] = $data['status_kependudukan'];
             }
-
-            // Update NIK (Jika ada)
             if(isset($data['nik'])) {
                 $sql .= ", nik=:nik";
                 $params[':nik'] = $data['nik'];
             }
-
-            // Update Password (Jika diisi)
             if (!empty($data['password'])) {
                 $sql .= ", password=:pass";
                 $params[':pass'] = password_hash($data['password'], PASSWORD_BCRYPT);
             }
 
             $sql .= " WHERE id=:id";
-
             $stmt = $this->conn->prepare($sql);
             return $stmt->execute($params);
         } catch (PDOException $e) {
-            return false;
+            die("ERROR SQL PASTI: " . $e->getMessage()); 
         }
     }
 
@@ -151,7 +129,11 @@ class UserController {
         }
     }
 
-    // Update Profil Diri Sendiri (Wrapper)
+    public function deletePenduduk($id) {
+        return $this->deleteUser($id);
+    }
+
+    // Update Profil Diri Sendiri
     public function updateProfile($id, $nama, $email, $hp, $alamat, $password = null) {
         $data = [
             'id' => $id, 'nama' => $nama, 'email' => $email, 
@@ -160,7 +142,7 @@ class UserController {
         return $this->updateUser($data) ? true : "Gagal memperbarui profil.";
     }
 
-    // --- FITUR PENGADUAN (SIA-TAMBAHAN) ---
+    //FITUR PENGADUAN 
     public function simpanPengaduan($uid, $subjek, $isi) {
         $sql = "INSERT INTO pengaduan (user_id, subjek, isi_pengaduan) VALUES (?, ?, ?)";
         $stmt = $this->conn->prepare($sql);
@@ -180,8 +162,13 @@ class UserController {
         $stmt->execute();
         return $stmt->fetchAll();
     }
+    public function updateStatusPengaduan($id, $status) {
+        $sql = "UPDATE pengaduan SET status = ? WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([$status, $id]);
+    }
 
-    // --- FITUR RESET PASSWORD ADMIN (SRS 4.1.4.d) ---
+    //FITUR RESET PASSWORD ADMIN
     public function resetPasswordUser($id, $newPass) {
         $hash = password_hash($newPass, PASSWORD_BCRYPT);
         $sql = "UPDATE users SET password = ? WHERE id = ?";
@@ -189,7 +176,7 @@ class UserController {
         return $stmt->execute([$hash, $id]);
     }
 
-    // --- FITUR MUTASI PENDUDUK (SRS 4.1.2.d) ---
+    //FITUR MUTASI PENDUDUK
     public function catatMutasi($userId, $jenis, $tanggal, $keterangan) {
         try {
             $this->conn->beginTransaction();

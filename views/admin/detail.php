@@ -30,7 +30,7 @@
                     <td>: <strong><?= $detail->nama_layanan ?></strong></td>
                 </tr>
                 <tr>
-                    <td style="font-weight: bold; padding: 8px 0;">Nomor Tiket</td>
+                    <td style="font-weight: bold; padding: 8px 0;">No. Registrasi</td>
                     <td>: <?= $detail->nomor_tiket ?></td>
                 </tr>
                 <tr>
@@ -44,7 +44,7 @@
             </table>
 
             <?php 
-                // Decode data JSON (Keperluan/Keterangan)
+                //Keperluan/Keterangan)
                 $infoTambahan = json_decode($detail->data_pengaju, true);
             ?>
             <div style="margin-top: 15px; background: #f9f9f9; padding: 10px; border-radius: 5px;">

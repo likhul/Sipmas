@@ -13,35 +13,41 @@ class PermohonanController {
         return $stmt->fetchAll();
     }
 
-    // AJUKAN SURAT (DENGAN VALIDASI FILE)
-    public function ajukanSurat($userId, $layananId, $dataInput, $fileInfo) {
+    public function ajukanSurat($userId, $layananId, $dataInput, $files) {
         try {
-            $this->conn->beginTransaction();
-            $tiket = "TIKET-" . date('Ymd') . "-" . rand(1000,9999);
+            $this->conn->beginTransaction();       
+            $tiket = "REG-" . date('Ymd') . "-" . rand(1000,9999);
             $stmt = $this->conn->prepare("INSERT INTO permohonan (user_id, layanan_id, nomor_tiket, data_pengaju, status, created_at) VALUES (?, ?, ?, ?, 'pending', NOW())");
             $stmt->execute([$userId, $layananId, $tiket, json_encode($dataInput)]);
             $permohonanId = $this->conn->lastInsertId();
 
-            // Validasi File
-            $ext = strtolower(pathinfo($fileInfo['name'], PATHINFO_EXTENSION));
-            if (!in_array($ext, ['pdf','jpg','jpeg','png'])) { 
-                $this->conn->rollBack(); return false; 
-            }
-
-            if ($fileInfo['error'] === UPLOAD_ERR_OK) {
-                $target = 'assets/uploads/DOC-' . $permohonanId . '-' . time() . '.' . $ext;
-                if (move_uploaded_file($fileInfo['tmp_name'], $target)) {
-                    $stmtDoc = $this->conn->prepare("INSERT INTO dokumen_pendukung (permohonan_id, nama_file, path_file) VALUES (?, ?, ?)");
-                    $stmtDoc->execute([$permohonanId, $fileInfo['name'], $target]);
+            if (isset($files['name']) && is_array($files['name'])) {
+                $count = count($files['name']);
+                $uploadDir = 'assets/uploads/';
+                if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+                for ($i = 0; $i < $count; $i++) {
+                    if ($files['error'][$i] !== UPLOAD_ERR_OK) continue;
+                    // Validasi Ekstensi
+                    $ext = strtolower(pathinfo($files['name'][$i], PATHINFO_EXTENSION));
+                    if (!in_array($ext, ['pdf','jpg','jpeg','png'])) continue; 
+                    // Upload
+                    $fileNameClean = basename($files['name'][$i]);
+                    $targetName = "DOC-" . $permohonanId . "-" . time() . "-" . $i . "." . $ext;
+                    $targetPath = $uploadDir . $targetName;
+                    if (move_uploaded_file($files['tmp_name'][$i], $targetPath)) {
+                        $stmtDoc = $this->conn->prepare("INSERT INTO dokumen_pendukung (permohonan_id, nama_file, path_file) VALUES (?, ?, ?)");
+                        $stmtDoc->execute([$permohonanId, $fileNameClean, $targetPath]);
+                    }
                 }
             }
             $this->conn->commit();
             return true;
-        } catch (Exception $e) { $this->conn->rollBack(); return false; }
+        } catch (Exception $e) { 
+            $this->conn->rollBack(); 
+            return false; 
+        }
     }
-
     public function getRiwayatUser($userId) {
-        // Fix: Join ke surat_digital untuk ambil nomor resmi
         $query = "SELECT p.*, l.nama_layanan, sd.nomor_surat_resmi 
                   FROM permohonan p 
                   JOIN jenis_layanan l ON p.layanan_id = l.id 
@@ -53,9 +59,7 @@ class PermohonanController {
         return $stmt->fetchAll();
     }
 
-    // --- FITUR ADMIN / KADES ---
     public function getPermohonanByStatus($status) {
-        // Fix: Hanya tampilkan yang belum diarsip (status_arsip = 0)
         $query = "SELECT p.*, u.nama_lengkap as nama_pemohon, l.nama_layanan, sd.nomor_surat_resmi 
                   FROM permohonan p 
                   JOIN users u ON p.user_id = u.id 
@@ -69,7 +73,10 @@ class PermohonanController {
     }
 
     public function getDetailPermohonan($id) {
-        $sql = "SELECT p.*, u.nama_lengkap, u.nik, u.alamat, l.nama_layanan, l.kode_surat,
+        $sql = "SELECT p.*, 
+                       u.nama_lengkap, u.nik, u.alamat, 
+                       u.tempat_lahir, u.tanggal_lahir, u.jenis_kelamin, u.agama, u.pekerjaan, u.status_perkawinan,
+                       l.nama_layanan, l.kode_surat,
                        sd.nomor_surat_resmi, sd.tanggal_dibuat as tgl_surat
                 FROM permohonan p
                 JOIN users u ON p.user_id = u.id
@@ -118,30 +125,26 @@ class PermohonanController {
         }
     }
 
-    // --- ARSIP (INI YANG TADI MISSING/HILANG) ---
     public function arsipkanSurat($id) {
         try {
             $query = "UPDATE permohonan SET status_arsip = 1 WHERE id = :id";
             $stmt = $this->conn->prepare($query);
             return $stmt->execute([':id' => $id]);
-        } catch (Exception $e) {
-            return false;
-        }
+        } catch (Exception $e) { return false; }
     }
 
     public function getArsip() {
-        $query = "SELECT p.*, u.nama_lengkap, l.nama_layanan 
-                  FROM permohonan p
-                  JOIN users u ON p.user_id = u.id
-                  JOIN jenis_layanan l ON p.layanan_id = l.id
-                  WHERE p.status_arsip = 1
-                  ORDER BY p.updated_at DESC";
+        $query = "SELECT p.*, u.nama_lengkap, l.nama_layanan, sd.nomor_surat_resmi 
+                  FROM permohonan p 
+                  JOIN users u ON p.user_id = u.id 
+                  JOIN jenis_layanan l ON p.layanan_id = l.id 
+                  LEFT JOIN surat_digital sd ON sd.permohonan_id = p.id
+                  WHERE p.status_arsip = 1 ORDER BY p.updated_at DESC";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll();
     }
 
-    // --- LAPORAN ---
     public function getLaporan($tglAwal, $tglAkhir, $status = null) {
         $sql = "SELECT p.*, u.nama_lengkap, u.nik, l.nama_layanan FROM permohonan p JOIN users u ON p.user_id = u.id JOIN jenis_layanan l ON p.layanan_id = l.id WHERE DATE(p.created_at) BETWEEN ? AND ? " . ($status ? "AND p.status = ?" : "") . " ORDER BY p.created_at ASC";
         $stmt = $this->conn->prepare($sql);

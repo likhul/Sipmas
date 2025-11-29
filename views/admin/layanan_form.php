@@ -27,8 +27,7 @@ $title = $isEdit ? 'Edit Jenis Layanan' : 'Tambah Jenis Layanan Baru';
                 <label>Persyaratan Dokumen (Pisahkan dengan koma):</label>
                 <textarea name="syarat" rows="3" required placeholder='Contoh: ["KTP", "KK", "Foto Usaha"]' 
                           style="width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px;"><?= $isEdit ? $layananEdit->syarat_dokumen : '' ?></textarea>
-                <small style="display:block; margin-top:-15px; margin-bottom:20px; color:#666;">Format JSON sederhana array string.</small>
-
+                          
                 <div style="text-align: right;">
                     <a href="index.php?page=kelola_layanan" style="margin-right: 15px; text-decoration: none; color: #666;">Batal</a>
                     <button type="submit" style="background: var(--primary-color); color: white; padding: 10px 25px; border: none; border-radius: 5px; cursor: pointer;">

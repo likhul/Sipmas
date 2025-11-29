@@ -1,5 +1,4 @@
 <?php
-// Cek Mode Edit atau Tambah
 $isEdit = isset($infoEdit);
 $formAction = $isEdit ? 'index.php?action=update_info' : 'index.php?action=simpan_info';
 $formTitle = $isEdit ? 'Edit Pengumuman' : 'Buat Pengumuman Baru';
@@ -56,10 +55,10 @@ $btnText = $isEdit ? 'Simpan Perubahan' : 'Publikasikan';
             <table>
                 <thead>
                     <tr>
-                        <th>Tanggal</th>
-                        <th>Kategori</th>
-                        <th>Judul</th>
-                        <th>Aksi</th>
+                        <th style="text-align: center">Tanggal</th>
+                        <th style="text-align: center">Kategori</th>
+                        <th style="text-align: center">Judul</th>
+                        <th style="text-align: center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,17 +72,18 @@ $btnText = $isEdit ? 'Simpan Perubahan' : 'Publikasikan';
                                 <span class="badge badge-warning"><?= $info->kategori ?></span>
                             </td>
                             <td><?= htmlspecialchars($info->judul) ?></td>
-                            <td>
-                                <a href="index.php?page=kelola_info&id=<?= $info->id ?>" 
-                                   style="color: #e0a800; font-weight: bold; text-decoration: none; margin-right: 10px;">
-                                   [Edit]
-                                </a>
+                            <td style="padding: 10px; border: 1px solid #eee; text-align: center;">
+                                <div style="display: flex; gap: 5px; justify-content: center;">
+                                    <a href="index.php?page=kelola_info&id=<?= $info->id ?>" class="btn-action btn-edit" style="min-width: auto;">
+                                       ✏️ Edit
+                                    </a>
 
-                                <a href="index.php?action=hapus_info&id=<?= $info->id ?>" 
-                                   onclick="return confirm('Hapus pengumuman ini?')" 
-                                   style="color: #dc3545; text-decoration: none; font-weight: bold;">
-                                   [Hapus]
-                                </a>
+                                    <a href="#" 
+                                        onclick="showPopup('delete', 'Hapus Info?', 'Pengumuman ini akan dihapus dari dashboard warga.', () => window.location.href='index.php?action=hapus_info&id=<?= $info->id ?>')" 
+                                        class="btn-action btn-delete" style="min-width: auto;">
+                                            🗑️ Hapus
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                         <?php endforeach; ?>

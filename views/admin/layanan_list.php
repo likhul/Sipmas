@@ -34,12 +34,17 @@
                             <?= $l->syarat_dokumen ?>
                         </td>
                         <td style="padding: 10px; text-align: center;">
-                            <a href="index.php?page=form_layanan&id=<?= $l->id ?>" 
-                               style="color: #e0a800; text-decoration: none; font-weight: bold; margin-right: 10px;">Edit</a>
-                            
-                            <a href="index.php?action=hapus_layanan&id=<?= $l->id ?>" 
-                               onclick="return confirm('Hapus layanan ini?')"
-                               style="color: #dc3545; text-decoration: none; font-weight: bold;">Hapus</a>
+                            <div style="display: flex; gap: 5px; justify-content: center;">
+                                <a href="index.php?page=form_layanan&id=<?= $l->id ?>" class="btn-action btn-edit" style="min-width: auto;">
+                                    ✏️ Edit
+                                </a>
+                                
+                                <a href="#" 
+                                    onclick="showPopup('delete', 'Hapus Layanan?', 'Jenis surat <?= htmlspecialchars($l->nama_layanan) ?> akan dihapus.', () => window.location.href='index.php?action=hapus_layanan&id=<?= $l->id ?>')" 
+                                    class="btn-action btn-delete" style="min-width: auto;">
+                                        🗑️ Hapus
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     <?php endforeach; ?>

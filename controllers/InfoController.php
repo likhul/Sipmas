@@ -17,7 +17,7 @@ class InfoController {
         return $stmt->fetchAll();
     }
 
-    // READ: Ambil 1 Info (Untuk Edit) -- [BARU]
+    // READ: Ambil 1 Info
     public function getInfoById($id) {
         $query = "SELECT * FROM informasi WHERE id = :id";
         $stmt = $this->conn->prepare($query);
@@ -35,7 +35,7 @@ class InfoController {
         ]);
     }
 
-    // UPDATE: Simpan Perubahan -- [BARU]
+    // UPDATE: Simpan Perubahan 
     public function updateInfo($id, $judul, $kategori, $isi) {
         $query = "UPDATE informasi SET judul = :judul, kategori = :kat, isi_konten = :isi WHERE id = :id";
         $stmt = $this->conn->prepare($query);

@@ -19,9 +19,6 @@
                 <label>Password:</label>
                 <input type="password" name="password" required minlength="6" placeholder="Minimal 6 karakter" style="margin-bottom: 15px;">
                 
-                <label>Alamat:</label>
-                <textarea name="alamat" required rows="2" placeholder="Alamat lengkap..." style="width: 100%; border:1px solid #ced4da; border-radius:6px; padding:10px;"></textarea>
-
                 <button type="submit" style="width: 100%; margin-top: 20px; padding: 12px;">Daftar Sekarang</button>
             </form>
             
@@ -48,16 +45,11 @@
 </div>
 
 <script>
-    // Cari semua input dengan nama 'nik'
     const inputNIK = document.querySelector('input[name="nik"]');
     
     if(inputNIK) {
-        // Event Listener: Setiap kali mengetik
         inputNIK.addEventListener('input', function(e) {
-            // Ganti semua karakter selain angka (0-9) dengan string kosong
             this.value = this.value.replace(/[^0-9]/g, '');
-            
-            // Potong jika lebih dari 16
             if(this.value.length > 16) {
                 this.value = this.value.slice(0, 16);
             }

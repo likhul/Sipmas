@@ -15,10 +15,7 @@ class AuthController {
         $user = $stmt->fetch();
 
         // Verifikasi Password
-        // Catatan: Di database seeder saya, passwordnya hash bcrypt. 
-        // Jika Anda manual insert di phpMyAdmin tanpa hash, gunakan md5 atau text biasa (tidak disarankan utk production).
         if ($user && password_verify($password, $user->password)) {
-            // Set Session
             $_SESSION['user_id'] = $user->id;
             $_SESSION['role'] = $user->role;
             $_SESSION['nama'] = $user->nama_lengkap;
@@ -29,11 +26,9 @@ class AuthController {
     }
 
     public function register($nik, $nama, $email, $password, $alamat) {
-
         if (!ctype_digit($nik)) {
             return "Format NIK tidak valid! Hanya boleh berisi angka.";
         }
-
         if (strlen($nik) != 16) {
             return "NIK harus tepat 16 digit angka.";
         }
@@ -43,7 +38,6 @@ class AuthController {
         $stmtCheck->execute([':email'=>$email, ':nik'=>$nik]);
         if($stmtCheck->rowCount() > 0) return "Email atau NIK sudah terdaftar!";
 
-        // Hash Password
         $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
         // Insert Warga Baru
@@ -56,7 +50,6 @@ class AuthController {
             ':nama' => $nama,
             ':email' => $email,
             ':pass' => $hashed_password,
-            ':alamat' => $alamat
         ])) {
             return true;
         }

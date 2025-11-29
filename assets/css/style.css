@@ -150,6 +150,52 @@ body {
 
 /* Tombol (Rounded & Shadow) */
 /* Update Bagian Tombol */
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Jarak ikon dan teks */
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap; /* Agar tidak turun baris */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    min-width: 100px; /* Lebar minimal agar seragam */
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Tombol Edit (Kuning/Orange - Text Gelap) */
+.btn-edit {
+    background-color: #ffb74d; /* Orange lembut */
+    color: #1a2a47; /* Teks Navy */
+}
+.btn-edit:hover {
+    background-color: #ffa726;
+}
+
+/* Tombol Hapus (Merah - Text Putih) */
+.btn-delete {
+    background-color: #ef5350; /* Merah lembut */
+    color: white;
+}
+.btn-delete:hover {
+    background-color: #e53935;
+}
+
+/* Ikon di dalam tombol */
+.btn-action i, .btn-action span.icon {
+    font-size: 1rem;
+}
+
 .btn-primary, button {
     background: var(--primary) !important; /* Paksa warna Navy */
     background: var(--primary-gradient) !important; /* Timpa dengan Gradient jika support */
@@ -384,10 +430,6 @@ td div[style*="display: flex"] {
     font-weight: 400;
 }
 
-/* ========================================= */
-/* FIX: MENGATASI HEADER TERTINDIH SIDEBAR */
-/* ========================================= */
-
 /* 1. Jika Body punya class 'admin-mode' (Admin/Kades sedang login) */
 body.admin-mode header {
     margin-left: 250px;          /* Geser Header ke kanan selebar Sidebar */
@@ -422,3 +464,295 @@ body.admin-mode header {
         width: 100%;
     }
 }
+
+.upload-zone {
+    border: 2px dashed var(--primary); /* Garis putus-putus Navy */
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    background-color: #f8fbff;
+    transition: all 0.3s ease;
+    position: relative;
+    cursor: pointer;
+}
+
+.upload-zone:hover {
+    background-color: #eef6ff;
+    border-color: var(--accent);
+    transform: scale(1.01);
+}
+
+.upload-icon {
+    font-size: 3rem;
+    color: var(--primary);
+    margin-bottom: 10px;
+    display: block;
+}
+
+.upload-text {
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 5px;
+    display: block;
+}
+
+.upload-hint {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Sembunyikan Input File Asli yang Jelek */
+.file-input-hidden {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Kotak Info Syarat (Alert Modern) */
+.info-box {
+    background: #e3f2fd;
+    border-left: 5px solid #2196f3;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    animation: fadeIn 0.5s;
+}
+
+/* Input Group dengan Ikon */
+.input-group-icon {
+    position: relative;
+}
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 42px; /* Sesuaikan dengan label */
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    z-index: 2;
+}
+/* Geser teks input agar tidak nabrak ikon */
+.input-with-icon {
+    padding-left: 45px !important;
+}
+
+/* ========================================= */
+/* STYLE TAMBAHAN: MODERN UPLOAD ZONE */
+/* ========================================= */
+
+/* Area Upload Keren */
+.upload-zone {
+    border: 2px dashed var(--primary); /* Garis putus-putus Navy */
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    background-color: #f8fbff;
+    transition: all 0.3s ease;
+    position: relative;
+    cursor: pointer;
+}
+
+.upload-zone:hover {
+    background-color: #eef6ff;
+    border-color: var(--accent);
+    transform: scale(1.01);
+}
+
+.upload-icon {
+    font-size: 3rem;
+    color: var(--primary);
+    margin-bottom: 10px;
+    display: block;
+}
+
+.upload-text {
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 5px;
+    display: block;
+}
+
+.upload-hint {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Sembunyikan Input File Asli yang Jelek */
+.file-input-hidden {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Kotak Info Syarat (Alert Modern) */
+.info-box {
+    background: #e3f2fd;
+    border-left: 5px solid #2196f3;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    animation: fadeIn 0.5s;
+}
+
+/* Input Group dengan Ikon */
+.input-group-icon {
+    position: relative;
+}
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 42px; /* Sesuaikan dengan label */
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    z-index: 2;
+}
+/* Geser teks input agar tidak nabrak ikon */
+.input-with-icon {
+    padding-left: 45px !important;
+}
+
+/* 1. Overlay (Latar Belakang Gelap + Blur) */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(26, 42, 71, 0.6); /* Navy Transparan */
+    backdrop-filter: blur(4px); /* Efek Kaca Buram */
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+/* Saat modal aktif */
+.modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 2. Kotak Modal */
+.modal-box {
+    background: white;
+    width: 90%;
+    max-width: 400px;
+    padding: 30px;
+    border-radius: 20px; /* Sudut sangat membulat */
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    text-align: center;
+    transform: scale(0.8);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* Efek membal */
+}
+
+.modal-overlay.show .modal-box {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* 3. Ikon & Teks */
+.modal-icon {
+    font-size: 3.5rem;
+    margin-bottom: 15px;
+    display: inline-block;
+    animation: popIcon 0.5s ease;
+}
+
+@keyframes popIcon {
+    0% { transform: scale(0); }
+    80% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.modal-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.modal-text {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+/* 4. Area Input (Khusus Penolakan) */
+.modal-input-area {
+    margin-bottom: 20px;
+    text-align: left;
+    display: none; /* Default sembunyi */
+}
+.modal-input-area textarea {
+    width: 100%;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    padding: 12px;
+    font-family: inherit;
+    resize: none;
+}
+.modal-input-area textarea:focus {
+    border-color: var(--accent);
+    outline: none;
+}
+
+/* 5. Tombol Aksi */
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.btn-modal {
+    padding: 10px 25px;
+    border-radius: 50px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    flex: 1;
+    transition: transform 0.2s;
+}
+.btn-modal:hover { transform: translateY(-2px); }
+
+.btn-cancel { background: #e9ecef; color: #444; }
+.btn-confirm { background: var(--primary); color: white; }
+.btn-danger-modal { background: var(--danger); color: white; }
+
+.btn-dark-custom {
+    background-color: #1a2a47; /* Warna Navy Gelap */
+    color: #ffffff !important; /* Teks Putih */
+    padding: 8px 16px;
+    border-radius: 6px;        /* Sudut Membulat */
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    border: none;
+    display: inline-flex;      /* Agar ikon dan teks sejajar */
+    align-items: center;
+    gap: 6px;                  /* Jarak ikon ke teks */
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+}
+
+.btn-dark-custom:hover {
+    background-color: #2c3e50; /* Sedikit lebih terang saat hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+/* Reset style link agar tidak ada garis bawah */
+a.btn-dark-custom { 
+    text-decoration: none; 
+}
+
