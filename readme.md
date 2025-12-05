@@ -60,7 +60,7 @@ AKUN LOGIN DEMO:
 Aplikasi Web: [http://sipmas2.infinityfree.me]
 
 ## 📸 Screenshot
-<img src="/assets/images/Admin.png"
+![Dashboard Admin](assets/images/Admin.png)
 
 ## 📝 Catatan Tambahan
 - Fitur "Cetak Surat" akan menghasilkan file dalam format PDF/Direct Print yang sudah dilengkapi dengan format resmi desa.
