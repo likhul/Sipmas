@@ -1,0 +1,39 @@
+# SIPMAS - Sistem Informasi Pelayanan Masyarakat
+
+**Nama Kelompok:** Kelompok 2
+**Anggota:**
+1. Adi Saputra (701230020) - [Jobdesk: misal. Backend & Database]
+2. Eka Saputra (701230018) - [Jobdesk: misal. Frontend & UI]
+3. Solikul Hadi (701230145) - [Jobdesk: misal. Dokumentasi & Testing]
+
+## Deskripsi Singkat
+SIPMAS adalah aplikasi berbasis web untuk mempermudah masyarakat mengajukan surat administrasi desa secara online, serta membantu perangkat desa dalam verifikasi dan pengarsipan dokumen.
+
+## Tujuan Sistem
+Menyelesaikan masalah birokrasi manual yang lambat, risiko kehilangan dokumen fisik, dan antrean panjang di kantor desa.
+
+## Teknologi yang Digunakan
+* **Bahasa:** PHP Native (MVC Architecture)
+* **Database:** MySQL
+* **Frontend:** HTML, CSS, JavaScript
+* **Tools:** XAMPP, VS Code
+
+## Cara Menjalankan Aplikasi
+1.  **Instalasi:**
+    * Download/Clone repository ini.
+    * Pindahkan folder ke `htdocs` (jika pakai XAMPP).
+    * Import file `sipmas.sql` ke phpMyAdmin.
+2.  **Konfigurasi:**
+    * Buka `config/database.php`, sesuaikan username/password database.
+3.  **Run:**
+    * Buka browser, akses `http://localhost/nama_folder`.
+
+## Akun Demo
+* **Admin:** admin@desa.id / 123456
+* **Kades:** kades@desa.id / 123456
+* **Masyarakat:** warga@gmail.com / password
+
+## Link Deployment
+Aplikasi dapat diakses secara online di:
+(http://sipmas2.infinityfree.me)
+
