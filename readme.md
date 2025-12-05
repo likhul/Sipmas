@@ -53,16 +53,14 @@ AKUN LOGIN DEMO:
    Pass : 123456
 
 3. WARGA (Pengajuan Surat)
-   Email: warga@gmail.com
-   Pass : password
+   Email: likhulhadi2@gmail.com
+   Pass : 123456
 
 ## 🌐 Link Deployment & Demo
 Aplikasi Web: [http://sipmas2.infinityfree.me]
-Video Demo: [Link Video YouTube Anda]
 
 ## 📸 Screenshot
-<img src="Sipmas-main/assets/images/tampilan sipmas.png"
-(Pastikan Anda mengupload gambar screenshot ke folder public/images di repo Anda)
+<img src="SIPMAS_1/assets/images/Admin.png"
 
 ## 📝 Catatan Tambahan
 - Fitur "Cetak Surat" akan menghasilkan file dalam format PDF/Direct Print yang sudah dilengkapi dengan format resmi desa.
